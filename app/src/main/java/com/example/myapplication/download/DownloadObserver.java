@@ -77,7 +77,7 @@ public class DownloadObserver extends ContentObserver {
                         break;
                     //下载完成
                     case DownloadManager.STATUS_SUCCESSFUL:
-                       DownloadProcessor.getInstance().onDownloadSuccess(localUri);
+                        DownloadProcessor.getInstance().onDownloadSuccess(localUri);
                         break;
                     //下载失败
                     case DownloadManager.STATUS_FAILED:
@@ -108,7 +108,7 @@ public class DownloadObserver extends ContentObserver {
         mQuery.setFilterById(downloadId);
     }
 
-    public void removeDownloadInfo(Context context){
+    public void removeDownloadInfo(Context context) {
         mReceiver.setDownLoadId(0);
         context.unregisterReceiver(mReceiver);
     }
@@ -126,7 +126,8 @@ public class DownloadObserver extends ContentObserver {
                 Cursor cursor = mDownloadManager.query(mQuery);
                 cursor.moveToFirst();
                 int count = cursor.getCount();
-                if(count == 0){
+                if (count == 0) {
+                    Log.i(TAG, "onChange: cursor count 0");
                     DownloadProcessor.getInstance().onDownloadFail("download fail");
                     return;
                 }
@@ -139,6 +140,7 @@ public class DownloadObserver extends ContentObserver {
                 Log.i(TAG, "onChange: bytes_downloaded:" + bytes_downloaded);
                 Log.i(TAG, "onChange: bytes_total:" + bytes_total);
                 Log.i(TAG, "onChange: progress:" + progress);
+                Log.i(TAG, "onChange: status:" + status);
                 if (status == DownloadManager.STATUS_SUCCESSFUL) {
                     DownloadProcessor.getInstance().onDownloadSuccess(localUri);
                     return;

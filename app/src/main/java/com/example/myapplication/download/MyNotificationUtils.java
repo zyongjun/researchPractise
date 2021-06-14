@@ -29,17 +29,14 @@ public class MyNotificationUtils {
 //            channel.setLightColor(Color.RED);//指定闪光是的灯光颜色
 //            channel.canShowBadge();//桌面laucher消息角标
 //            channel.enableVibration(true);//是否允许震动
-            channel.setSound(null, null);
+//            channel.setSound(null, null);
             //channel.getAudioAttributes();//获取系统通知响铃声音配置
 //            channel.getGroup();//获取通知渠道组
-            channel.setBypassDnd(true);//设置可以绕过，请勿打扰模式
+//            channel.setBypassDnd(true);//设置可以绕过，请勿打扰模式
 //            channel.setVibrationPattern(new long[]{100, 100, 200});//震动的模式，震3次，第一次100，第二次100，第三次200毫秒
 //            channel.shouldShowLights();//是否会闪光
             //通知管理者创建的渠道
             getManager(mContext).createNotificationChannel(channel);
-
-//        }
-
         return new NotificationCompat.Builder(mContext,channelId).setAutoCancel(true)
                 .setContentTitle(title)
                 .setContentText(content).setSmallIcon(R.mipmap.ic_launcher);
@@ -68,10 +65,23 @@ public class MyNotificationUtils {
         getManager(mContext).notify(manageId, builder.build());
     }
 
+    public static void showProgressNotification(Context context,int progress){
+        String channelId = DownloadProcessor.PACKAGE_NAME_UMETRIP;
+        NotificationChannel channel = new NotificationChannel(channelId
+                , context.getPackageName(), NotificationManager.IMPORTANCE_DEFAULT);
+        NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        manager.createNotificationChannel(channel);
+        NotificationCompat.Builder builder = getNotificationBuilder(context,"正在下载","test",channelId);
+        builder.setOnlyAlertOnce(true);
+        builder.setDefaults(Notification.FLAG_ONLY_ALERT_ONCE);
+        builder.setProgress(100, progress, false);
+        builder.setWhen(System.currentTimeMillis());
+        manager.notify(DownloadProcessor.PACKAGE_NAME_UMETRIP.hashCode(), builder.build());
+    }
 
     public static void showNotificationProgressApkDown(Context mContext
             , int progress) {
-        final NotificationCompat.Builder builder = getNotificationBuilder(mContext,"正在下载","悠游云驾","yunjia");
+        final NotificationCompat.Builder builder = getNotificationBuilder(mContext,"正在下载","test","yunjia");
         builder.setOnlyAlertOnce(true);
         builder.setDefaults(Notification.FLAG_ONLY_ALERT_ONCE);
         builder.setProgress(100, progress, false);

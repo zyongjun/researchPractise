@@ -1,0 +1,23 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+interface Animal
+class User
+class Dog
+Animal <|.. User
+Animal <|.. Dog
+interface Action{
+    eat()
+    run()
+}
+abstract class AnimalActon
+class UserAction
+class DogAction
+Action <|.. AnimalActon
+AnimalActon <|-- UserAction
+AnimalActon <|-- DogAction
+
+UserAction <-- User
+DogAction <-- Dog
+
+@enduml
