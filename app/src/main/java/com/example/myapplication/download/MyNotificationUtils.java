@@ -124,21 +124,41 @@ public class MyNotificationUtils {
                 .setContentText("test").setSmallIcon(R.mipmap.ic_launcher);
         builder.setOnlyAlertOnce(true);
         builder.setDefaults(Notification.FLAG_ONLY_ALERT_ONCE);
-        builder.setProgress(100, 0, false);
-//        builder.setBadgeIconType()
+        builder.setProgress(100, 30, false);
         builder.setWhen(System.currentTimeMillis());
 
-        RemoteViews remoteViews = new RemoteViews(context.getPackageName(),R.layout.notification_ume_progress);
-//        notification.contentView.addView(R.id.notification_main_column,remoteViews);
-        remoteViews.setImageViewResource(R.id.icon,R.mipmap.ic_launcher);
-        remoteViews.setTextViewText(R.id.app_name_text,"我的应用");
+        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.notification_ume_progress);
+        remoteViews.setImageViewResource(R.id.icon, R.mipmap.ic_launcher);
+        remoteViews.setProgressBar(R.id.progress, 100, 30, false);
+        remoteViews.setTextViewText(R.id.app_name_text, "我的应用");
+        remoteViews.setTextViewText(R.id.tv_progress, "40.2MB/89.5MB");
+        remoteViews.setTextViewText(R.id.tv_title, "正在下载...");
+        remoteViews.setOnClickPendingIntent(R.id.iv_cancel, getCancelDownloadIntent(context));
         builder.setContent(remoteViews);
-//        Notification notification = builder.build();
-//        notification.contentView
         getManager(context).notify(DownloadProcessor.PACKAGE_NAME_UMETRIP.hashCode(), builder.build());
     }
 
-    private static final String ACTION_RECEIVER = "com.example.myapplication.contentc.lick";
+    private static final String ACTION_CANCEL_DOWNLOAD = "com.example.myapplication.cancel.download";
+    private static BroadcastReceiver mCancelDownloadBroadReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.i(TAG, "onReceive: action:" + intent.getAction());
+            context.unregisterReceiver(this);
+        }
+    };
+
+    private static PendingIntent getCancelDownloadIntent(Context context) {
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(ACTION_CANCEL_DOWNLOAD);
+        context.registerReceiver(mCancelDownloadBroadReceiver, intentFilter);
+        Intent intent = new Intent(ACTION_CANCEL_DOWNLOAD);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
+                1, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+        return pendingIntent;
+    }
+
+    private static final String ACTION_RECEIVER = "com.example.myapplication.content.click";
     private static BroadcastReceiver mContentBroadReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -159,7 +179,7 @@ public class MyNotificationUtils {
         getManager(context).createNotificationChannel(channel);
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(ACTION_RECEIVER);
-        context.registerReceiver(mContentBroadReceiver,intentFilter);
+        context.registerReceiver(mContentBroadReceiver, intentFilter);
         Intent intent = new Intent(ACTION_RECEIVER);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
                 1, intent,
