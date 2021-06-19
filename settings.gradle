@@ -1,3 +1,4 @@
+include ':netmodule'
 include ':plugin'
 include ':app'
 rootProject.name = "MyGridleDeom"

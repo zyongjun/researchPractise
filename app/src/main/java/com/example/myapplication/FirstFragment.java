@@ -55,15 +55,22 @@ public class FirstFragment extends Fragment {
 //                }).start();
             }
         });
+        view.findViewById(R.id.btn_notification_test).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NavHostFragment.findNavController(FirstFragment.this)
+                        .navigate(R.id.action_FirstFragment_to_SecondFragment);
+            }
+        });
     }
 
     private int getTestA(int a, int b) {
-        int c = a +b;
-        return c+c*2;
+        int c = a + b;
+        return c + c * 2;
     }
 
     private int getTestB(int a, int b) {
-        int c = a +b;
-        return c+c*2;
+        int c = a + b;
+        return c + c * 2;
     }
 }
