@@ -13,6 +13,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.text.HtmlCompat;
 import android.text.Spanned;
 import android.util.Log;
+import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import com.example.myapplication.R;
@@ -124,7 +125,16 @@ public class MyNotificationUtils {
         builder.setOnlyAlertOnce(true);
         builder.setDefaults(Notification.FLAG_ONLY_ALERT_ONCE);
         builder.setProgress(100, 0, false);
+//        builder.setBadgeIconType()
         builder.setWhen(System.currentTimeMillis());
+
+        RemoteViews remoteViews = new RemoteViews(context.getPackageName(),R.layout.notification_ume_progress);
+//        notification.contentView.addView(R.id.notification_main_column,remoteViews);
+        remoteViews.setImageViewResource(R.id.icon,R.mipmap.ic_launcher);
+        remoteViews.setTextViewText(R.id.app_name_text,"我的应用");
+        builder.setContent(remoteViews);
+//        Notification notification = builder.build();
+//        notification.contentView
         getManager(context).notify(DownloadProcessor.PACKAGE_NAME_UMETRIP.hashCode(), builder.build());
     }
 
