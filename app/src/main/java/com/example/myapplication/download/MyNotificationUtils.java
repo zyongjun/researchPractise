@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.ColorStateList;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.text.HtmlCompat;
@@ -133,6 +134,7 @@ public class MyNotificationUtils {
         remoteViews.setTextViewText(R.id.app_name_text, "我的应用");
         remoteViews.setTextViewText(R.id.tv_progress, "40.2MB/89.5MB");
         remoteViews.setTextViewText(R.id.tv_title, "正在下载...");
+        remoteViews.setLong(R.id.time,"setTime",System.currentTimeMillis());
         remoteViews.setOnClickPendingIntent(R.id.iv_cancel, getCancelDownloadIntent(context));
         builder.setContent(remoteViews);
         getManager(context).notify(DownloadProcessor.PACKAGE_NAME_UMETRIP.hashCode(), builder.build());

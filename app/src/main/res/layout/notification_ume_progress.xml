@@ -81,8 +81,9 @@
                 android:ellipsize="marquee"
                 android:fadingEdge="horizontal"
                 android:textSize="14sp"
-                android:textColor="#de000000"
                 android:text="29.7MB/89.5MB" />
+<!--          dark  #b2ffffff-->
+<!--            light #de000000-->
         </LinearLayout>
 
         <LinearLayout
@@ -94,13 +95,12 @@
 
             <ProgressBar
                 android:id="@+id/progress"
-                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                style="@android:style/Widget.Material.ProgressBar.Horizontal"
                 android:layout_width="0dp"
                 android:layout_height="15dp"
                 android:layout_marginEnd="12dp"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1" />
-
             <ImageView
                 android:id="@+id/iv_cancel"
                 android:layout_width="18dp"
