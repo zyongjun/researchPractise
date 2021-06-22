@@ -123,9 +123,10 @@ public class MyNotificationUtils {
         final NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId).setAutoCancel(true)
                 .setContentTitle("正在下载")
                 .setContentText("test").setSmallIcon(R.mipmap.ic_launcher);
+        builder.setStyle(new NotificationCompat.DecoratedCustomViewStyle());
         builder.setOnlyAlertOnce(true);
         builder.setDefaults(Notification.FLAG_ONLY_ALERT_ONCE);
-        builder.setProgress(100, 30, false);
+//        builder.setProgress(100, 30, false);
         builder.setWhen(System.currentTimeMillis());
 
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.notification_ume_progress);
@@ -186,10 +187,18 @@ public class MyNotificationUtils {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
                 1, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
+        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.notification_ume_progress);
+        remoteViews.setImageViewResource(R.id.icon, R.mipmap.ic_launcher);
+        remoteViews.setProgressBar(R.id.progress, 100, 30, false);
+        remoteViews.setTextViewText(R.id.app_name_text, "我的应用");
+        remoteViews.setTextViewText(R.id.tv_progress, "40.2MB/89.5MB");
+        remoteViews.setTextViewText(R.id.tv_title, "正在下载...");
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId).setAutoCancel(true)
                 .setContentTitle("\"应用市场\"应用下载失败")
                 .setContentText(content).setSmallIcon(R.mipmap.ic_launcher)
                 .setContentIntent(pendingIntent);
+        builder.setStyle(new NotificationCompat.DecoratedCustomViewStyle());
+        builder.setCustomBigContentView(remoteViews);
         builder.setOnlyAlertOnce(true);
         builder.setDefaults(Notification.FLAG_ONLY_ALERT_ONCE);
 //        builder.setProgress(100, 0, false);
