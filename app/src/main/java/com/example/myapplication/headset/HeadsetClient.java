@@ -17,6 +17,7 @@ public class HeadsetClient {
         AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         AudioDeviceInfo[] devices = audioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS);
         if (devices == null || devices.length == 0) {
+            Log.i(TAG, "no device outputs");
             return false;
         }
         Arrays.stream(devices).forEach(audioDeviceInfo ->
