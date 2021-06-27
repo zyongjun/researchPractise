@@ -39,11 +39,6 @@ public class NotificationFragment extends Fragment {
 //                        .navigate(R.id.action_SecondFragment_to_FirstFragment);
             }
         });
-        view.findViewById(R.id.button_retry).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MyNotificationUtils.showRetry(MyApplication.getContext());
-            }
-        });
+        view.findViewById(R.id.button_retry).setOnClickListener(v -> MyNotificationUtils.showRetry(getActivity()));
     }
 }
