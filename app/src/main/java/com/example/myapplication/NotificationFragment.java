@@ -1,8 +1,5 @@
 package com.example.myapplication;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,10 +8,7 @@ import android.view.ViewGroup;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
-import androidx.navigation.fragment.NavHostFragment;
-
 import com.example.myapplication.download.MyNotificationUtils;
-import com.example.netmodule.RetrofitManager;
 
 public class NotificationFragment extends Fragment {
 

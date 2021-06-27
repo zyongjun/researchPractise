@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".HeadsetFragment">
+
+
+    <Button
+        android:id="@+id/btn_headset"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="耳机状态检测" />
+
+    <Button
+        android:id="@+id/btn_call"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="通话状态检测"/>
+
+    <TextView
+        android:id="@+id/tv_check_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="unknown" />
+</LinearLayout>
