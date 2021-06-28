@@ -71,19 +71,17 @@ public class HeadsetFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mTvStatus = view.findViewById(R.id.tv_check_status);
-        view.findViewById(R.id.btn_headset).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                boolean isHeadsetInUse = mHeadsetClient.checkAudioStatus();
-                mTvStatus.setText("耳机状态:"+isHeadsetInUse);
-            }
+        view.findViewById(R.id.btn_headset).setOnClickListener(v -> {
+            boolean isHeadsetInUse = mHeadsetClient.checkAudioStatus();
+            mTvStatus.setText("耳机状态:" + isHeadsetInUse);
         });
-        view.findViewById(R.id.btn_call).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
+        view.findViewById(R.id.btn_call).setOnClickListener(v -> {
+            int state = mHeadsetClient.checkPhoneState();
+            mTvStatus.setText("通话状态：" + state);
         });
-
+        view.findViewById(R.id.btn_net_call).setOnClickListener(v -> {
+            int mode = mHeadsetClient.checkNetCall();
+            mTvStatus.setText("网络电话mode:" + mode);
+        });
     }
 }
