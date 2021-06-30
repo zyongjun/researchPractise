@@ -25,6 +25,12 @@
         android:layout_height="wrap_content"
         android:text="网络电话mode检测"/>
 
+    <Button
+        android:id="@+id/btn_task_execute"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="执行监听任务"/>
+
     <TextView
         android:id="@+id/tv_check_status"
         android:layout_width="wrap_content"

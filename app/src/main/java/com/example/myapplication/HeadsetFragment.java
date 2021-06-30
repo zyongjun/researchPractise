@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,7 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.myapplication.headset.HeadsetClient;
+import com.example.myapplication.headset.BoardingRemindEvent;
+import com.example.myapplication.headset.HeadsetStatusInspector;
+import com.example.myapplication.headset.RemindEventHandler;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,7 +30,8 @@ public class HeadsetFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     private TextView mTvStatus;
-    private HeadsetClient mHeadsetClient = new HeadsetClient();
+    private HeadsetStatusInspector mHeadsetStatusInspector = new HeadsetStatusInspector();
+    private RemindEventHandler mRemindEventHandler = new RemindEventHandler();
 
     public HeadsetFragment() {
         // Required empty public constructor
@@ -67,21 +71,25 @@ public class HeadsetFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_headset, container, false);
     }
 
+    private Handler mHandler = new Handler();
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mTvStatus = view.findViewById(R.id.tv_check_status);
         view.findViewById(R.id.btn_headset).setOnClickListener(v -> {
-            boolean isHeadsetInUse = mHeadsetClient.checkAudioStatus();
+            boolean isHeadsetInUse = mHeadsetStatusInspector.isHeadsetEnable();
             mTvStatus.setText("耳机状态:" + isHeadsetInUse);
         });
         view.findViewById(R.id.btn_call).setOnClickListener(v -> {
-            int state = mHeadsetClient.checkPhoneState();
+            int state = mHeadsetStatusInspector.checkPhoneState();
             mTvStatus.setText("通话状态：" + state);
         });
         view.findViewById(R.id.btn_net_call).setOnClickListener(v -> {
-            int mode = mHeadsetClient.checkNetCall();
+            int mode = mHeadsetStatusInspector.checkNetCall();
             mTvStatus.setText("网络电话mode:" + mode);
         });
+        view.findViewById(R.id.btn_task_execute).setOnClickListener(v ->
+            mHandler.postDelayed(() -> mRemindEventHandler.postRemindEvent(new BoardingRemindEvent()),8000)
+        );
     }
 }
