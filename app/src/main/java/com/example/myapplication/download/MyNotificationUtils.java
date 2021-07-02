@@ -121,9 +121,11 @@ public class MyNotificationUtils {
 
     public static void showProgressWithCancel(Context context) {
         Toast.makeText(context, "可取消进度条通知", Toast.LENGTH_SHORT).show();
-        String channelId = DownloadProcessor.PACKAGE_NAME_UMETRIP;
+//        String channelId = DownloadProcessor.PACKAGE_NAME_UMETRIP;
+//        String channelId = "cloudlink_channelId";
+        String channelId = "cloudlink_channelId_normal";
         NotificationChannel channel = new NotificationChannel(channelId
-                , context.getPackageName(), NotificationManager.IMPORTANCE_HIGH);
+                , "下载安装通知", NotificationManager.IMPORTANCE_DEFAULT);
         NotificationChannelGroup group = new NotificationChannelGroup(channelId,"下载");
         getManager(context).createNotificationChannelGroup(group);
         channel.canBypassDnd();//可否绕过，请勿打扰模式
@@ -136,13 +138,14 @@ public class MyNotificationUtils {
         builder.setDefaults(Notification.FLAG_ONLY_ALERT_ONCE);
 //        builder.setProgress(100, 30, false);
         builder.setWhen(System.currentTimeMillis());
-        builder.setFullScreenIntent(null,true);
+        builder.setFullScreenIntent(getCancelDownloadIntent(context),true);
         Bundle bundle = new Bundle();
         bundle.putString("android.substName", "音频切换");
         bundle.putBoolean("hw_disable_ntf_delete_menu", true);
-        bundle.putBoolean("hw_disable_ntf_icon_in_bar", true);
+//        bundle.putBoolean("hw_disable_ntf_icon_in_bar", true);
         builder.addExtras(bundle);
         builder.setOngoing(true);
+        builder.setPriority(1);
 
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.notification_ume_progress);
         remoteViews.setImageViewResource(R.id.icon, R.mipmap.ic_launcher);
@@ -153,7 +156,10 @@ public class MyNotificationUtils {
         remoteViews.setLong(R.id.time,"setTime",System.currentTimeMillis());
         remoteViews.setOnClickPendingIntent(R.id.iv_cancel, getCancelDownloadIntent(context));
         builder.setContent(remoteViews);
-        getManager(context).notify(DownloadProcessor.PACKAGE_NAME_UMETRIP.hashCode(), builder.build());
+        builder.setCustomHeadsUpContentView(remoteViews);
+        Notification notification = builder.build();
+        notification.defaults = 1;
+        getManager(context).notify(DownloadProcessor.PACKAGE_NAME_UMETRIP.hashCode(), notification);
     }
 
     private static final String ACTION_CANCEL_DOWNLOAD = "com.example.myapplication.cancel.download";
@@ -188,8 +194,10 @@ public class MyNotificationUtils {
     public static void showRetry(Context context) {
         Toast.makeText(context, "重试通知", Toast.LENGTH_SHORT).show();
         NotificationChannel channel = new NotificationChannel(channelId
-                , context.getPackageName(), NotificationManager.IMPORTANCE_DEFAULT);
+                , "普通通知", NotificationManager.IMPORTANCE_DEFAULT);
         channel.canBypassDnd();//可否绕过，请勿打扰模式
+//        channel.setSound(null,null);
+//        channel.setLockscreenVisibility(Notification.VISIBILITY_SECRET);
 //        int color = ContextCompat.getColor(context, R.color.colorPrimaryDark);
 //        Spanned content = HtmlCompat.fromHtml("<font color=\"" + color + "\">" + "点击重试" + "</font>", HtmlCompat.FROM_HTML_MODE_LEGACY);
 
@@ -218,6 +226,8 @@ public class MyNotificationUtils {
         builder.setOnlyAlertOnce(true);
         builder.setDefaults(Notification.FLAG_ONLY_ALERT_ONCE);
         builder.addAction(replyAction);
+        builder.setPriority(1);
+        builder.setFullScreenIntent(getCancelDownloadIntent(context),true);
 //        builder.setProgress(100, 0, false);
         builder.setWhen(System.currentTimeMillis());
         getManager(context).notify(DownloadProcessor.PACKAGE_NAME_UMETRIP.hashCode(), builder.build());
