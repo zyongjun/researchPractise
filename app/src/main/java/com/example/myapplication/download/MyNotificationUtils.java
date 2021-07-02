@@ -2,6 +2,7 @@ package com.example.myapplication.download;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
+import android.app.NotificationChannelGroup;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -10,6 +11,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.ColorStateList;
 import android.graphics.BitmapFactory;
+import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.Person;
@@ -41,7 +43,7 @@ public class MyNotificationUtils {
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         //id随便指定
         NotificationChannel channel = new NotificationChannel(channelId
-                , mContext.getPackageName(), NotificationManager.IMPORTANCE_DEFAULT);
+                , mContext.getPackageName(), NotificationManager.IMPORTANCE_HIGH);
         channel.canBypassDnd();//可否绕过，请勿打扰模式
 //            channel.enableLights(true);//闪光
 //            channel.setLockscreenVisibility(Notification.VISIBILITY_SECRET);//锁屏显示通知
@@ -121,7 +123,9 @@ public class MyNotificationUtils {
         Toast.makeText(context, "可取消进度条通知", Toast.LENGTH_SHORT).show();
         String channelId = DownloadProcessor.PACKAGE_NAME_UMETRIP;
         NotificationChannel channel = new NotificationChannel(channelId
-                , context.getPackageName(), NotificationManager.IMPORTANCE_DEFAULT);
+                , context.getPackageName(), NotificationManager.IMPORTANCE_HIGH);
+        NotificationChannelGroup group = new NotificationChannelGroup(channelId,"下载");
+        getManager(context).createNotificationChannelGroup(group);
         channel.canBypassDnd();//可否绕过，请勿打扰模式
         getManager(context).createNotificationChannel(channel);
         final NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId).setAutoCancel(true)
@@ -132,6 +136,13 @@ public class MyNotificationUtils {
         builder.setDefaults(Notification.FLAG_ONLY_ALERT_ONCE);
 //        builder.setProgress(100, 30, false);
         builder.setWhen(System.currentTimeMillis());
+        builder.setFullScreenIntent(null,true);
+        Bundle bundle = new Bundle();
+        bundle.putString("android.substName", "音频切换");
+        bundle.putBoolean("hw_disable_ntf_delete_menu", true);
+        bundle.putBoolean("hw_disable_ntf_icon_in_bar", true);
+        builder.addExtras(bundle);
+        builder.setOngoing(true);
 
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.notification_ume_progress);
         remoteViews.setImageViewResource(R.id.icon, R.mipmap.ic_launcher);
