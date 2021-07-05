@@ -17,6 +17,9 @@
         <action
             android:id="@+id/action_FirstFragment_to_headsetFragment"
             app:destination="@id/HeadsetFragment" />
+        <action
+            android:id="@+id/action_FirstFragment_to_downloadManagerFragment"
+            app:destination="@id/DownloadManagerFragment" />
     </fragment>
     <fragment
         android:id="@+id/SecondFragment"
@@ -32,6 +35,16 @@
     <fragment
         android:id="@+id/HeadsetFragment"
         android:name="com.example.myapplication.HeadsetFragment"
+        android:label="@string/headset_fragment_label"
+        tools:layout="@layout/fragment_headset">
+
+        <action
+            android:id="@+id/action_FirstFragment_to_headsetFragment"
+            app:destination="@id/HeadsetFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/DownloadManagerFragment"
+        android:name="com.example.myapplication.DownloadManagerFragment"
         android:label="@string/headset_fragment_label"
         tools:layout="@layout/fragment_headset">
 

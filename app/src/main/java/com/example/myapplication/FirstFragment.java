@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.myapplication.download.DownloadProcessor;
+import com.example.myapplication.hook.Hooker;
 
 public class FirstFragment extends Fragment {
     private static final String TAG = "FirstFragment";
@@ -27,9 +28,9 @@ public class FirstFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         view.findViewById(R.id.button_download).setOnClickListener(view1 -> {
-//                NavHostFragment.findNavController(FirstFragment.this)
-//                        .navigate(R.id.action_FirstFragment_to_SecondFragment);
-            DownloadProcessor.getInstance().download("");
+                NavHostFragment.findNavController(FirstFragment.this)
+                        .navigate(R.id.action_FirstFragment_to_downloadManagerFragment);
+//            DownloadProcessor.getInstance().download("");
         });
         view.findViewById(R.id.btn_notification_test).setOnClickListener(v ->
                 NavHostFragment.findNavController(FirstFragment.this)
@@ -37,6 +38,12 @@ public class FirstFragment extends Fragment {
         view.findViewById(R.id.btn_headset).setOnClickListener(v -> {
             NavHostFragment.findNavController(FirstFragment.this)
                     .navigate(R.id.action_FirstFragment_to_headsetFragment);
+        });
+        view.findViewById(R.id.btn_hook).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
         });
     }
 }

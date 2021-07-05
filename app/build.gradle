@@ -6,8 +6,8 @@ android {
     buildToolsVersion "30.0.2"
 
     defaultConfig {
-//        applicationId "com.example.myapplication"
-        applicationId "com.huawei.welink"
+        applicationId "com.example.myapplication"
+//        applicationId "com.huawei.welink"
         minSdkVersion 26
         targetSdkVersion 29
         versionCode 1

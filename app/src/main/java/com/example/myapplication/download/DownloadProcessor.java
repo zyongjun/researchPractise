@@ -4,6 +4,7 @@ import android.app.DownloadManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.ContentValues;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Environment;
@@ -44,13 +45,15 @@ public class DownloadProcessor implements DownloadStatusListener {
         private static final DownloadProcessor INSTANCE = new DownloadProcessor();
     }
 
+    private Uri mDownloadUri;
+
     public void download(String url) {
         Log.i(TAG, "download start");
         // todo network not enable should return
         // todo has download task should remove all
         Context context = MyApplication.getContext();
         DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
-        if(!mDownloadIds.isEmpty()){
+        if (!mDownloadIds.isEmpty()) {
             long[] downloadIds = mDownloadIds.stream().mapToLong(value -> value).toArray();
             downloadManager.remove(downloadIds);
             mDownloadIds.clear();
@@ -62,10 +65,60 @@ public class DownloadProcessor implements DownloadStatusListener {
         long downloadId = downloadManager.enqueue(request);
         mDownloadIds.add(downloadId);
         Log.i(TAG, "download: id:" + downloadId);
-        Uri downloadUri = Uri.withAppendedPath(BASE_URI_DOWNLOAD, String.valueOf(downloadId));
-        Log.i(TAG, "download: uri:" + downloadUri.toString());
+        mDownloadUri = Uri.withAppendedPath(BASE_URI_DOWNLOAD, String.valueOf(downloadId));
+        Log.i(TAG, "download: uri:" + mDownloadUri.toString());
         mDownloadObserver.initDownloadInfo(context, downloadId);
-        MyApplication.getContext().getContentResolver().registerContentObserver(downloadUri, false, mDownloadObserver);
+        MyApplication.getContext().getContentResolver().registerContentObserver(mDownloadUri, false, mDownloadObserver);
+    }
+
+    public boolean resumeDownload(String downloadTitle) {
+        Log.i(TAG, "resumeDownload: ");
+        int updatedRows = 0;
+        ContentValues resumeDownload = new ContentValues();
+        resumeDownload.put("control", 0); // Resume Control Value
+        try {
+//            updatedRows = MyApplication.getContext()
+//                    .getContentResolver()
+//                    .update(Uri.parse("content://downloads/my_downloads"),
+//                            resumeDownload,
+//                            "title=?",
+//                            new String[]{ downloadTitle });
+            updatedRows = MyApplication.getContext()
+                    .getContentResolver()
+                    .update(mDownloadUri,
+                            resumeDownload,
+                            "",
+                            new String[]{});
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to update control for downloading video");
+        }
+        Log.i(TAG, "resumeDownload: updateRow:" + updatedRows);
+        return 0 < updatedRows;
+    }
+
+    public boolean pauseDownload(String downloadTitle) {
+        Log.i(TAG, "pauseDownload: ");
+        int updatedRows = 0;
+        ContentValues pauseDownload = new ContentValues();
+        pauseDownload.put("control", 1); // Pause Control Value
+        try {
+//            updatedRows = MyApplication.getContext()
+//                    .getContentResolver()
+//                    .update(Uri.parse("content://downloads/my_downloads"),
+//                            pauseDownload,
+//                            "title=?",
+//                            new String[]{downloadTitle});
+            updatedRows = MyApplication.getContext()
+                    .getContentResolver()
+                    .update(mDownloadUri,
+                            pauseDownload,
+                            "",
+                            new String[]{});
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to update control for downloading video");
+        }
+        Log.i(TAG, "pauseDownload: updateRow:" + updatedRows);
+        return 0 < updatedRows;
     }
 
     @Override
