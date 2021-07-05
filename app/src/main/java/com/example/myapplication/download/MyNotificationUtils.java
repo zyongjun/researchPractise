@@ -126,7 +126,7 @@ public class MyNotificationUtils {
         String channelId = "cloudlink_channelId_normal";
         NotificationChannel channel = new NotificationChannel(channelId
                 , "下载安装通知", NotificationManager.IMPORTANCE_DEFAULT);
-        NotificationChannelGroup group = new NotificationChannelGroup(channelId,"下载");
+        NotificationChannelGroup group = new NotificationChannelGroup(channelId, "下载");
         getManager(context).createNotificationChannelGroup(group);
         channel.canBypassDnd();//可否绕过，请勿打扰模式
         getManager(context).createNotificationChannel(channel);
@@ -138,7 +138,7 @@ public class MyNotificationUtils {
         builder.setDefaults(Notification.FLAG_ONLY_ALERT_ONCE);
 //        builder.setProgress(100, 30, false);
         builder.setWhen(System.currentTimeMillis());
-        builder.setFullScreenIntent(getCancelDownloadIntent(context),true);
+        builder.setFullScreenIntent(getCancelDownloadIntent(context), true);
         Bundle bundle = new Bundle();
         bundle.putString("android.substName", "音频切换");
         bundle.putBoolean("hw_disable_ntf_delete_menu", true);
@@ -153,7 +153,7 @@ public class MyNotificationUtils {
         remoteViews.setTextViewText(R.id.app_name_text, "我的应用");
         remoteViews.setTextViewText(R.id.tv_progress, "40.2MB/89.5MB");
         remoteViews.setTextViewText(R.id.tv_title, "正在下载...");
-        remoteViews.setLong(R.id.time,"setTime",System.currentTimeMillis());
+        remoteViews.setLong(R.id.time, "setTime", System.currentTimeMillis());
         remoteViews.setOnClickPendingIntent(R.id.iv_cancel, getCancelDownloadIntent(context));
         builder.setContent(remoteViews);
         builder.setCustomHeadsUpContentView(remoteViews);
@@ -205,13 +205,18 @@ public class MyNotificationUtils {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(ACTION_RECEIVER);
         context.registerReceiver(mContentBroadReceiver, intentFilter);
-        NotificationCompat.Action replyAction =
+        NotificationCompat.Action pauseAction =
                 new NotificationCompat.Action.Builder(
                         0,
-                        "回复",
+                        "暂停",
                         getPendingIntent(context))
                         .build();
-
+        NotificationCompat.Action cancelAction =
+                new NotificationCompat.Action.Builder(
+                        0,
+                        "取消",
+                        getPendingIntent(context))
+                        .build();
 //        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.notification_ume_progress);
 //        remoteViews.setImageViewResource(R.id.icon, R.mipmap.ic_launcher);
 //        remoteViews.setProgressBar(R.id.progress, 100, 30, false);
@@ -219,21 +224,24 @@ public class MyNotificationUtils {
 //        remoteViews.setTextViewText(R.id.tv_progress, "40.2MB/89.5MB");
 //        remoteViews.setTextViewText(R.id.tv_title, "正在下载...");
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId).setAutoCancel(true)
-                .setContentTitle("\"应用市场\"应用下载失败")
+                .setContentTitle("正在下载")
+                .setContentText("20MB/90MB")
                 .setSmallIcon(R.mipmap.ic_launcher)
+                .setProgress(100,39,false)
                 .setContentIntent(getPendingIntent(context));
 //        builder.setCustomBigContentView(remoteViews);
-        builder.setOnlyAlertOnce(true);
-        builder.setDefaults(Notification.FLAG_ONLY_ALERT_ONCE);
-        builder.addAction(replyAction);
-        builder.setPriority(1);
-        builder.setFullScreenIntent(getCancelDownloadIntent(context),true);
+        builder.setOnlyAlertOnce(true)
+                .setDefaults(Notification.FLAG_ONLY_ALERT_ONCE)
+                .addAction(pauseAction)
+                .addAction(cancelAction)
+                .setPriority(1)
+                .setFullScreenIntent(getCancelDownloadIntent(context), true);
 //        builder.setProgress(100, 0, false);
         builder.setWhen(System.currentTimeMillis());
         getManager(context).notify(DownloadProcessor.PACKAGE_NAME_UMETRIP.hashCode(), builder.build());
     }
 
-    private static PendingIntent getPendingIntent(Context context){
+    private static PendingIntent getPendingIntent(Context context) {
         Intent intent = new Intent(ACTION_RECEIVER);
         return PendingIntent.getBroadcast(context,
                 1, intent,
@@ -253,7 +261,7 @@ public class MyNotificationUtils {
         // Add an action to allow replies.
         NotificationCompat.Action replyAction =
                 new NotificationCompat.Action.Builder(
-                       0,
+                        0,
                         "回复",
                         replyIntent)
                         .build();
@@ -266,7 +274,7 @@ public class MyNotificationUtils {
                         .addMessage(message, timestamp, person);
 
         NotificationCompat.Builder builder =
-                new NotificationCompat.Builder(context,channelId)
+                new NotificationCompat.Builder(context, channelId)
                         .setStyle(messagingStyle)
                         .setDefaults(NotificationCompat.DEFAULT_VIBRATE)
                         .setSmallIcon(R.mipmap.ic_launcher)
