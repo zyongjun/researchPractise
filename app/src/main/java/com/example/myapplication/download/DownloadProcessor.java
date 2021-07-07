@@ -155,8 +155,10 @@ public class DownloadProcessor implements DownloadStatusListener {
         manager.createNotificationChannel(channel);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId).setAutoCancel(true)
                 .setContentTitle("正在下载")
-                .setContentText("test").setSmallIcon(R.mipmap.ic_launcher);
-        ;
+                .setContentText("test").setSmallIcon(android.R.drawable.stat_sys_download);
+//        android.R.drawable.stat_sys_warning
+//        android.R.drawable.stat_sys_download_done
+//        android.R.drawable.stat_sys_download
         builder.setOnlyAlertOnce(true);
         builder.setDefaults(Notification.FLAG_ONLY_ALERT_ONCE);
         builder.setProgress(100, progress, false);

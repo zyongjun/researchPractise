@@ -132,7 +132,7 @@ public class MyNotificationUtils {
         getManager(context).createNotificationChannel(channel);
         final NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId).setAutoCancel(true)
                 .setContentTitle("正在下载")
-                .setContentText("test").setSmallIcon(R.mipmap.ic_launcher);
+                .setContentText("test").setSmallIcon(R.drawable.progress_horizontal_custom);
         builder.setStyle(new NotificationCompat.DecoratedCustomViewStyle());
         builder.setOnlyAlertOnce(true);
         builder.setDefaults(Notification.FLAG_ONLY_ALERT_ONCE);
