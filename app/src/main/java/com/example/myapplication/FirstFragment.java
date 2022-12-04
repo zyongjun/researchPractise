@@ -12,8 +12,10 @@ import android.support.v4.app.Fragment;
 
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.example.myapplication.compat.BaseCompat;
 import com.example.myapplication.download.DownloadProcessor;
 import com.example.myapplication.hook.Hooker;
+import com.example.myapplication.plugin.IBase;
 import com.example.myapplication.plugin.impl.IBaseImpl;
 
 public class FirstFragment extends Fragment {
@@ -47,8 +49,15 @@ public class FirstFragment extends Fragment {
         view.findViewById(R.id.btn_hook).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int index = base.getFolderIndex();
+                IBase baseProxy = BaseCompat.getCompat(base);
+                int index = baseProxy.getFolderIndex();
                 Log.i(TAG, "onClick: index" + index);
+                int width = baseProxy.getFolderWidth();
+                Log.i(TAG, "onClick: getFolderWidth" + width);
+                int screenWidth = baseProxy.getSizeImpl().getScreenWidth();
+                Log.i(TAG, "onClick: getScreenWidth" + screenWidth);
+                int screenHeight = baseProxy.getSizeImpl().getScreenHeight();
+                Log.i(TAG, "onClick: getScreenHeight" + screenHeight);
             }
         });
     }
