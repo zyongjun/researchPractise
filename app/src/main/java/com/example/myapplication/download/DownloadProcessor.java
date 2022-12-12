@@ -10,20 +10,13 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.v4.app.NotificationCompat;
+import androidx.core.app.NotificationCompat;
 import android.util.Log;
 
 import com.example.myapplication.MyApplication;
-import com.example.myapplication.R;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.IntFunction;
-import java.util.function.ToLongFunction;
-import java.util.stream.Collectors;
 
 public class DownloadProcessor implements DownloadStatusListener {
     private static final String TAG = "DownloadProcessor";

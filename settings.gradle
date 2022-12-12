@@ -1,5 +1,5 @@
+include ':compat-annotation'
 include ':compat-compile'
-include ':compat-runtime'
 include ':netmodule'
 include ':plugin'
 include ':app'

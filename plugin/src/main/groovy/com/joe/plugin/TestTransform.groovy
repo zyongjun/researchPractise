@@ -44,13 +44,13 @@ class TestTransform extends Transform{
             input.directoryInputs.each {
                 DirectoryInput directoryInput ->
                     def dest = outputProvider.getContentLocation(directoryInput.name,directoryInput.contentTypes,directoryInput.scopes, Format.DIRECTORY)
-                    println('========directoryInput============'+directoryInput.file.getAbsolutePath())
+//                    println('========directoryInput============'+directoryInput.file.getAbsolutePath())
                     def dir = directoryInput.file
                     if(dir){
-                        dir.traverse(type: FileType.FILES,nameFilter:~/.*\.class/) {
-                            File classFile ->
-                                println("@@@@@"+classFile.getAbsolutePath())
-                        }
+//                        dir.traverse(type: FileType.FILES,nameFilter:~/.*\.class/) {
+//                            File classFile ->
+//                                println("@@@@@"+classFile.getAbsolutePath())
+//                        }
                     }
                     FileUtils.copyDirectory(directoryInput.file,dest)
             }
@@ -58,7 +58,7 @@ class TestTransform extends Transform{
             input.jarInputs.each {
                 JarInput jarInput ->
                     def jarName = jarInput.name
-                    println('====jarName=========='+jarInput.file.getAbsolutePath())
+//                    println('====jarName=========='+jarInput.file.getAbsolutePath())
                     def md5Name = DigestUtils.md5Hex(jarInput.file.getAbsolutePath())
                     if(jarName.endsWith(".jar")){
                         jarName = jarName.substring(0,jarName.length()-4)

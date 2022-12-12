@@ -5,10 +5,11 @@ import android.media.AudioAttributes;
 import android.media.AudioDeviceInfo;
 import android.media.AudioFocusRequest;
 import android.media.AudioManager;
-import android.support.annotation.IntDef;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+
+import androidx.annotation.IntDef;
 
 import com.example.myapplication.MyApplication;
 
