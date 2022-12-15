@@ -6,11 +6,15 @@ import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.ParameterSpec;
+import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -21,8 +25,11 @@ import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import javax.tools.Diagnostic.Kind;
@@ -64,10 +71,30 @@ public class BindProcessor extends AbstractProcessor {
             String pkg = mElementUtils.getPackageOf(element).getQualifiedName().toString();
             note(element,"class name:%s.%s",pkg,className);
             ClassName target = ClassName.get(pkg, className);
+            ElementKind kind = element.getKind();
+            note(element, "annotated kind %s ", kind);
+            if (!kind.isInterface() && !kind.isClass()) {
+                continue;
+            }
+
+            // We can cast it, because we know that it of ElementKind.CLASS
+            TypeElement typeElement = (TypeElement) element;
+            List<MethodSpec> methodSpecList = new ArrayList<>();
             TypeSpec.Builder builder = TypeSpec.classBuilder(className+"Compat")
                     .addModifiers(Modifier.PUBLIC)
                     .addField(refTypeField(target))
                     .addMethod(constructor(target));
+            // Check if an empty public constructor is given
+            for (Element enclosed : element.getEnclosedElements()) {
+                ElementKind enclosedKind = enclosed.getKind();
+                note(element, "enclosed kind %s ", enclosedKind);
+                if (enclosed.getKind() == ElementKind.CONSTRUCTOR) {
+                    continue;
+                }
+                ExecutableElement methodElement = (ExecutableElement) enclosed;
+                builder.addMethod(method(methodElement));
+            }
+
             JavaFile javaFile = JavaFile.builder(pkg, builder.build())
                     .addFileComment("Generated code from Compat compiler. Do not modify!")
                     .build();
@@ -92,6 +119,30 @@ public class BindProcessor extends AbstractProcessor {
                 .addParameter(target, TARGET)
                 .addCode(codeBlock)
                 .build();
+    }
+
+    /**
+     * 构造函数
+     */
+    public static MethodSpec method(ExecutableElement methodElement) {
+        CodeBlock.Builder codeBlockBuilder = CodeBlock.builder();
+
+        MethodSpec.Builder builder = MethodSpec.methodBuilder(methodElement.getSimpleName().toString())
+                .addModifiers(Modifier.PUBLIC);
+        TypeName returnType = TypeName.get(methodElement.getReturnType());
+        builder.returns(returnType);
+        for (VariableElement parameter : methodElement.getParameters()) {
+            ParameterSpec spec = ParameterSpec.get(parameter);
+            builder.addParameter(spec);
+
+            if(returnType != TypeName.VOID){
+                codeBlockBuilder.addStatement("return this.target.$N($N)",methodElement.getSimpleName(),spec);
+            }else{
+                codeBlockBuilder.addStatement("this.target.$N($N)",methodElement.getSimpleName(),spec);
+            }
+        }
+        builder.addCode(codeBlockBuilder.build());
+        return builder.build();
     }
 
     /**
