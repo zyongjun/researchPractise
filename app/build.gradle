@@ -33,9 +33,10 @@ tasks.whenTaskAdded {task->
 }
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation project(':netmodule')
     implementation project(':compat-annotation')
     annotationProcessor project(':compat-compile')
+    implementation project(':netmodule')
+    implementation project(':commsdk')
     implementation 'androidx.appcompat:appcompat:1.0.0'
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'

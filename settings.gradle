@@ -1,3 +1,5 @@
+include ':commsdk'
+include ':testplugin'
 include ':compat-annotation'
 include ':compat-compile'
 include ':netmodule'
