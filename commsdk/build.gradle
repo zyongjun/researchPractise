@@ -8,6 +8,8 @@ java {
 }
 
 dependencies {
-    implementation project(':compat-annotation')
-    annotationProcessor project(':compat-compile')
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    annotationProcessor fileTree(dir: "libs", include: ["*.jar"])
+//    implementation project(':compat-compile')
+    annotationProcessor 'com.squareup:javapoet:1.8.0' //通过类调用的形式来生成java代码，避免手动拼接字符串
 }
